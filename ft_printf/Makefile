@@ -1,25 +1,25 @@
 NAME = libftprintf.a
 
 
-SRCS = printf.c,  print_str.c, print_num.c, print_char.c \
+SRCS = printf.c print_str.c print_num.c print_char.c ft_strlen.c\
 
-INCLUDE = libftprintf.h
+INCLUDE = ft_printf.h
 
 CC = gcc
 RM = rm -f
 CFLAGS = -Wall -Wextra -Werror
 
-%.o: %.c ${INCLUDE} Makefile
+%.o: %.c ${INCLUDE} 
 			@echo " ◎ Compiling   >   $<"
 			@${CC} ${CFLAGS} -c $< -o $@
 
 OBJS = ${SRCS:.c=.o}
 
+all:	${NAME}
+
 ${NAME}: ${OBJS} $(INCLUDE)
 				@ar -rsc ${NAME} ${OBJS}
 				@echo "\n Created $(NAME) ✓ \n"
-
-all:	${NAME}
 
 clean:
 			@${RM} ${OBJS} 

@@ -3,100 +3,96 @@
 /*                                                        :::      ::::::::   */
 /*   print_num.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pescola- <pescola-@student.42barcel>       +#+  +:+       +#+        */
+/*   By: pescola- <pescola-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 23:59:26 by pescola-          #+#    #+#             */
-/*   Updated: 2023/02/16 02:17:05 by pescola-         ###   ########.fr       */
+/*   Updated: 2023/02/26 19:23:50 by pescola-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"libftprintf.h"
+#include"ft_printf.h"
 
-int print_hex(int n, const char ch)
+int	print_hex(unsigned int n, const char ch)
 {	
-	char	*hex_base;
+	char	*hex_base_no_cap;
+	char	*hex_base_cap;
 
-	hex_base = "0123456789abcdef";
-	if (n > 9 && n < 16)
-	{
-		if (ch == 'x')
-			return print_char(hex_base[(n % 10) + 10]);
-		else if (ch == 'X' || ch == "p")
-			return print_char(hex_base[(n % 10) + 10] - 32);
-		else
-			return (-1);
-
-	}
-	else if (n > -1 && n < 10)
-		return print_char(hex_base[n]);
+	hex_base_no_cap = "0123456789abcdef";
+	hex_base_cap = "0123456789ABCDEF";
+	if (ch == 'x' || ch == 'p')
+		return (ft_putchar(hex_base_no_cap[n]));
+	else if (ch == 'X')
+		return (ft_putchar(hex_base_cap[n]));
 	else
 		return (-1);
-
 }
-int	put_dec(long n, const char x)
+
+int	put_dec(long long int n, const char x, int res)
 {	
-	char	i;
-	int		z;
-	
-	z = 0;
 	if (n < 0)
 	{
-		if (x = "u")
+		n *= -1;
+		if (write(1, "-", 1) != 1)
 			return (-1);
-		else
-		{
-			n *= -1;
-			i ='-';
-   		 	z = write(1, &i, 1);
-   		 	if (z != 1)
-     			return (-1);
-		}
+		res++;
 	}
 	if (n > 9)
 	{
-		i = put_dec(n / 10);
+		res = put_dec(n / 10, x, res);
+		if (res == -1)
+			return (-1);
 		n = n % 10;
 	}
 	if (n < 10)
 	{
-		i = n + '0';
-		z += print_char(i);
-		return (z);
+		if (ft_putchar(n + '0') != 1)
+			return (-1);
+		res++;
+		return (res);
 	}
+	return (-1);
 }
 
-int	put_hex(long n, const char base)
+int	put_hex(unsigned int n, const char base, int res)
 {	
-	char	i;
-	int		z;
-	
-	z = 0;
-	if (n < 0)
-	{
-		n *= -1;
-		i ='-';
-
-   		 z = write(1, &i, 1);
-   		 if (z != 1)
-     		 return (-1);
-	}
 	if (n > 15)
 	{
-		i = put_hex(n / 16);
+		res = put_hex(n / 16, base, res);
+		if (res == -1)
+			return (-1);
 		n = n % 16;
-	}
-	else
-	{
-		z += print_hex(i);
-		return (z);
-	}
+	}	
+	if (print_hex(n, base) != 1)
+		return (-1);
+	res++;
+	return (res);
 }
-int	put_num(long n, const char base)
+
+int	put_pointr(unsigned long long n, const char base, int res)
+{	
+	if (n > 15)
+	{
+		res = put_pointr(n / 16, base, res);
+		n = n % 16;
+	}	
+	if (print_hex(n, base) != 1)
+		return (-1);
+	res++;
+	return (res);
+}
+
+int	put_num(long long int n, const char base)
 {
-	if (base == "d" || base == "i" || base =="u")
-		return (put_dec(n, base));
-	else if (base == "x" || base = "X" || base = "p")
-		return (put_hex(n, base));
+	if (base == 'd' || base == 'i' || base == 'u')
+		return (put_dec(n, base, 0));
+	else if (base == 'x' || base == 'X')
+		return (put_hex(n, base, 0));
+	else if (base == 'p')
+	{
+		if (write(1, "0x", 2) != 2)
+			return (-1);
+		return (put_pointr((unsigned long long)n, base, 0) + 2);
+	}
 	else
 		return (-1);
 }

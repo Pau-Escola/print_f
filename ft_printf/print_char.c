@@ -3,22 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   print_char.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pescola- <pescola-@student.42barcel>       +#+  +:+       +#+        */
+/*   By: pescola- <pescola-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/14 17:45:07 by pescola-          #+#    #+#             */
-
+/*   Created: 2023/02/24 19:58:58 by pescola-          #+#    #+#             */
+/*   Updated: 2023/02/26 18:16:27 by pescola-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"libftprintf.h"
+#include"ft_printf.h"
 
 int	ft_putchar(const char c)
 {
-	int	z;
-
-	z = write(1, &c, 1);
-	if (z != 1)
-	  return (-1);
-	return z;
-   
+	if (write(1, &c, 1) != 1)
+		return (-1);
+	return (1);
 }
